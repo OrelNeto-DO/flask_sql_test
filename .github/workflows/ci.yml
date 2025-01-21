@@ -41,11 +41,3 @@ jobs:
         # Push images
         docker push orelneto/flaskapp_with_db_motogpgif:${{ github.run_number }}
         docker push orelneto/flaskapp_with_db_motogpgif:latest
-
-    - name: Trigger CD Pipeline
-      if: success()
-      uses: peter-evans/repository-dispatch@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        event-type: trigger-cd
-        client-payload: '{"image_tag": "${{ github.run_number }}"}'
