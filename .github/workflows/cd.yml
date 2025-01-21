@@ -1,0 +1,40 @@
+name: CD Pipeline
+
+on:
+  repository_dispatch:
+    types: [trigger-cd]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    - name: Create k8s directory on remote
+      run: |
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} "mkdir -p ~/k8s-deploy"
+
+    - name: Copy k8s files to remote
+      run: |
+        cd k8s/
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} scp -o StrictHostKeyChecking=no -r * ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }}:~/k8s-deploy/
+
+    - name: Deploy to Kubernetes
+      run: |
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} '
+          cd ~/k8s-deploy
+          kubectl apply -f .
+          kubectl rollout restart deployment flask-app
+        '
+
+    - name: Check deployment status
+      run: |
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} '
+          kubectl get pods
+          kubectl get services
+        '
