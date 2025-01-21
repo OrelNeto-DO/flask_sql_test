@@ -20,16 +20,29 @@ jobs:
     - name: Install sshpass
       run: sudo apt-get install -y sshpass
 
+    - name: Test SSH Connection
+      run: |
+        echo "Testing SSH connection..."
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} 'echo "SSH Connection successful" && hostname && pwd'
+
+    - name: Test kubectl
+      run: |
+        echo "Testing kubectl..."
+        sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} 'which kubectl && kubectl version --client'
+
     - name: Create k8s directory on remote
+      if: success()
       run: |
         sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} "mkdir -p ~/k8s-deploy"
 
     - name: Copy k8s files to remote
+      if: success()
       run: |
         cd k8s/
         sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} scp -o StrictHostKeyChecking=no -r * ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }}:~/k8s-deploy/
 
     - name: Deploy to Kubernetes
+      if: success()
       run: |
         sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} '
           cd ~/k8s-deploy
@@ -38,6 +51,7 @@ jobs:
         '
 
     - name: Check deployment status
+      if: success()
       run: |
         sshpass -p ${{ secrets.SELA_MASTER_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SELA_MASTER_USER }}@${{ secrets.SELA_MASTER_IP }} '
           kubectl get pods
