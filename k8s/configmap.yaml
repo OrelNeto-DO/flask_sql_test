@@ -1,0 +1,11 @@
+# k8s/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flask-config
+data:
+  FLASK_ENV: "development"
+  DB_HOST: "mysql"  # זה צריך להיות שם ה-service של MySQL
+  DB_PORT: "3306"
+  DB_NAME: "mydatabase"
+  PORT: "5000"

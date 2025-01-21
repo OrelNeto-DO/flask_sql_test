@@ -1,0 +1,12 @@
+# k8s/flask-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+  selector:
+    app: flask-app

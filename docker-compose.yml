@@ -1,0 +1,29 @@
+services:
+  app:
+    build: .
+    image: orelneto/flaskapp_with_db_motogpgif:1.00 
+    ports:
+      - "5005:5000"
+    environment:
+      - FLASK_ENV=development
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=mydatabase
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3306:3306"
+    volumes:
+      - sqldata:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+volumes:
+  sqldata:

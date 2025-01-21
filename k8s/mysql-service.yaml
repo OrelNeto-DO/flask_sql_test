@@ -1,0 +1,11 @@
+# k8s/mysql-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3306
+  selector:
+    app: mysql

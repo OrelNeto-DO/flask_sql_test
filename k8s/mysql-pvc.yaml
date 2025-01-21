@@ -1,0 +1,12 @@
+# k8s/mysql-pvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: hostpath  # בדיוק כמו שראינו בפלט של kubectl get storageclass
+  resources:
+    requests:
+      storage: 1Gi
