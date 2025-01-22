@@ -1,42 +1,37 @@
-# System and local cache files
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfvars
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+.terraform.lock.hcl
+
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.log
-.DS_Store
-.env
+*.py[cod]
+*$py.class
+venv/
+ENV/
+
+# IDEs
 .vscode/
 .idea/
-*.swp
 
-# Docker-related files
-docker-compose.override.yml
-Dockerfile.*
+# OS
+.DS_Store
+Thumbs.db
 
-# Sensitive data and configurations
-secrets.yaml
-*.pem
-*.key
-*.crt
-*.kube/config
+# Node (for Lambda)
+node_modules/
 
-# Database and runtime artifacts
-*.sqlite3
-*.db
-*.pid
+# AWS
+.aws/
 
-# Python virtual environment
-venv/
-.env/
-
-# Automatically generated Kubernetes files
-k8s/secrets.yaml
-k8s/configmap.yaml
-k8s/mysql-init-configmap.yaml
-
-# Temporary and backup files
-*.bak
-*.tmp
-*.cache
+# Misc
 *.log
-*.out
