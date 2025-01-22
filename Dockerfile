@@ -1,17 +1,17 @@
-# בסיס למערכת ההפעלה
+# Base image for the operating system
 FROM python:3.8
 
-# תיקיית עבודה באפליקציה
+# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# העתקת כל הקבצים
+# Copy all files from the local directory to the container
 COPY . .
 
-# התקנת ספריות Python הנדרשות
+# Install required Python libraries
 RUN pip install --no-cache-dir -r requirements.txt
 
-# חשיפת הפורט שהאפליקציה תאזין לו
+# Expose the port the application will listen on
 EXPOSE 5000
 
-# הפעלת האפליקציה
+# Command to run the application
 CMD ["python", "./app.py"]
