@@ -1,0 +1,42 @@
+# System and local cache files
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.DS_Store
+.env
+.vscode/
+.idea/
+*.swp
+
+# Docker-related files
+docker-compose.override.yml
+Dockerfile.*
+
+# Sensitive data and configurations
+secrets.yaml
+*.pem
+*.key
+*.crt
+*.kube/config
+
+# Database and runtime artifacts
+*.sqlite3
+*.db
+*.pid
+
+# Python virtual environment
+venv/
+.env/
+
+# Automatically generated Kubernetes files
+k8s/secrets.yaml
+k8s/configmap.yaml
+k8s/mysql-init-configmap.yaml
+
+# Temporary and backup files
+*.bak
+*.tmp
+*.cache
+*.log
+*.out

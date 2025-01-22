@@ -1,0 +1,29 @@
+# System and local cache files
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+.vscode/
+.idea/
+*.swp
+
+# Virtual environment
+venv/
+.env/
+
+# Unnecessary local files for Docker build
+.git/
+.gitignore
+docker-compose.override.yml
+Dockerfile.*
+
+# Kubernetes-specific files
+k8s/secrets.yaml
+k8s/configmap.yaml
+k8s/mysql-init-configmap.yaml
+
+# Logs and temporary files
+*.log
+*.tmp
+*.cache
+*.out
