@@ -132,7 +132,8 @@ resource "aws_instance" "app_server" {
               chown -R ec2-user:ec2-user /home/ec2-user/app
 
               # Build and run with docker-compose
-              /usr/local/bin/docker-compose up -d
+              /usr/local/bin/docker-compose pull
+              /usr/local/bin/docker-compose up -d --no-build
 
               # Enable docker to start on boot
               systemctl enable docker
