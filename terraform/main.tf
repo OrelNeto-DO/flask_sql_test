@@ -1,8 +1,8 @@
 terraform {
   backend "s3" {
-    bucket         = "devops1114bucket"  # שם ה-Bucket שלך
-    key            = "gifapp.tfstate"   # נתיב ה-state בתוך ה-Bucket
-    region         = var.aws_region      # האזור בו נמצא ה-Bucket
+    bucket         = "devops1114bucket"  
+    key            = "gifapp.tfstate"   
+    region         = "us-east-1"      
     encrypt        = true
   }
 }
