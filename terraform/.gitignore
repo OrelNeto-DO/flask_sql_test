@@ -1,0 +1,54 @@
+# Terraform state files and lock files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Terraform configuration files that may contain sensitive data
+terraform.tfvars
+terraform.tfvars.json
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform crash logs
+crash.log
+
+# Docker-related files
+docker-compose.override.yml
+.dockerignore
+
+# Kubernetes configuration files and cache
+k8s-configs/
+*.yaml~
+*.yml~
+.kube/
+
+# Environment variables files (may contain secrets)
+.env
+.env.*
+*.secret
+secrets/
+
+# Python virtual environment and cache files
+venv/
+.env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Log files
+*.log
+logs/
+debug.log
+nohup.out
+
+# IDE/editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+.DS_Store

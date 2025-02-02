@@ -11,12 +11,12 @@ resource "aws_cloudwatch_event_target" "auto_destroy" {
 }
 
 resource "aws_lambda_function" "auto_destroy" {
-  filename      = "lambda_function_destroy.zip"
+  filename      = "lambda/lambda_function.zip"
   function_name = "auto_destroy"
-  role         = aws_iam_role.lambda_role.arn
-  handler      = "destroy.handler"
-  runtime      = "nodejs16.x"
-  timeout      = 900
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "index.handler"
+  runtime       = "nodejs16.x"
+  timeout       = 900
 
   environment {
     variables = {
