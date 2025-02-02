@@ -1,12 +1,3 @@
-terraform {
-  backend "s3" {
-    bucket         = "devops1114bucket"  
-    key            = "gifapp.tfstate"   
-    region         = "us-east-1"      
-    encrypt        = true
-  }
-}
-
 provider "aws" {
   region = var.aws_region
 }
@@ -17,7 +8,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name        = "flask-app-vpc"
+    Name = "flask-app-vpc"
     AutoDestroy = "true"
   }
 }
@@ -29,7 +20,7 @@ resource "aws_subnet" "public" {
   availability_zone       = "${var.aws_region}a"
 
   tags = {
-    Name        = "flask-app-subnet"
+    Name = "flask-app-subnet"
     AutoDestroy = "true"
   }
 }
@@ -38,7 +29,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name        = "flask-app-igw"
+    Name = "flask-app-igw"
     AutoDestroy = "true"
   }
 }
@@ -52,7 +43,7 @@ resource "aws_route_table" "main" {
   }
 
   tags = {
-    Name        = "flask-app-rt"
+    Name = "flask-app-rt"
     AutoDestroy = "true"
   }
 }
@@ -74,6 +65,27 @@ resource "aws_security_group" "app" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # SSH Access
+  }
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # HTTP Access
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]  # HTTPS Access
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
@@ -82,7 +94,7 @@ resource "aws_security_group" "app" {
   }
 
   tags = {
-    Name        = "flask-app-sg"
+    Name = "flask-app-sg"
     AutoDestroy = "true"
   }
 }
@@ -109,8 +121,8 @@ resource "aws_instance" "app_server" {
               EOF
 
   tags = {
-    Name        = "flask-app-server"
-    AutoStop    = "true"
+    Name = "flask-app-server"
+    AutoStop = "true"
     AutoDestroy = "true"
   }
 }
