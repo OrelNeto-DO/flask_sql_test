@@ -122,18 +122,27 @@ resource "aws_instance" "app_server" {
               curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               chmod +x /usr/local/bin/docker-compose
 
+              # Export DB variables
+              export DB_USER=${var.db_user}
+              export DB_PASSWORD=${var.db_password}
+              export DB_HOST=${var.db_host}
+              export DB_PORT=${var.db_port}
+              export DB_NAME=${var.db_name}
+              export PORT=${var.port}
+
               # Clone the repository
               cd /home/ec2-user
               git clone https://github.com/OrelNeto-DO/flask_sql_test.git app
               cd app
 
-              # Set permissions
-              chmod 755 /usr/local/bin/docker-compose
-              chown -R ec2-user:ec2-user /home/ec2-user/app
-
-              # Build and run with docker-compose
-              /usr/local/bin/docker-compose pull
-              /usr/local/bin/docker-compose up -d --no-build
+              # Run docker-compose with environment variables
+              DB_USER=$DB_USER \
+              DB_PASSWORD=$DB_PASSWORD \
+              DB_HOST=$DB_HOST \
+              DB_PORT=$DB_PORT \
+              DB_NAME=$DB_NAME \
+              PORT=$PORT \
+              /usr/local/bin/docker-compose up -d
 
               # Enable docker to start on boot
               systemctl enable docker
