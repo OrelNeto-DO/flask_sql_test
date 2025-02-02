@@ -1,3 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket         = "devops1114bucket"  # שם ה-Bucket שלך
+    key            = "gifapp.tfstate"   # נתיב ה-state בתוך ה-Bucket
+    region         = var.aws_region      # האזור בו נמצא ה-Bucket
+    encrypt        = true
+  }
+}
+
 provider "aws" {
   region = var.aws_region
 }
@@ -8,7 +17,7 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
 
   tags = {
-    Name = "flask-app-vpc"
+    Name        = "flask-app-vpc"
     AutoDestroy = "true"
   }
 }
@@ -20,7 +29,7 @@ resource "aws_subnet" "public" {
   availability_zone       = "${var.aws_region}a"
 
   tags = {
-    Name = "flask-app-subnet"
+    Name        = "flask-app-subnet"
     AutoDestroy = "true"
   }
 }
@@ -29,7 +38,7 @@ resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
   tags = {
-    Name = "flask-app-igw"
+    Name        = "flask-app-igw"
     AutoDestroy = "true"
   }
 }
@@ -43,7 +52,7 @@ resource "aws_route_table" "main" {
   }
 
   tags = {
-    Name = "flask-app-rt"
+    Name        = "flask-app-rt"
     AutoDestroy = "true"
   }
 }
@@ -73,7 +82,7 @@ resource "aws_security_group" "app" {
   }
 
   tags = {
-    Name = "flask-app-sg"
+    Name        = "flask-app-sg"
     AutoDestroy = "true"
   }
 }
@@ -100,8 +109,8 @@ resource "aws_instance" "app_server" {
               EOF
 
   tags = {
-    Name = "flask-app-server"
-    AutoStop = "true"
+    Name        = "flask-app-server"
+    AutoStop    = "true"
     AutoDestroy = "true"
   }
 }
