@@ -100,9 +100,9 @@ resource "aws_security_group" "app" {
 }
 
 resource "aws_instance" "app_server" {
-  ami           = var.ami_id
-  instance_type = "t2.micro"
-  subnet_id     = aws_subnet.public.id
+  ami                    = var.ami_id
+  instance_type         = "t2.micro"
+  subnet_id             = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.app.id]
   
   root_block_device {
@@ -112,12 +112,30 @@ resource "aws_instance" "app_server" {
 
   user_data = <<-EOF
               #!/bin/bash
+              # Update and install dependencies
               yum update -y
-              yum install -y docker
+              yum install -y docker git
               service docker start
               usermod -a -G docker ec2-user
+
+              # Install docker-compose
               curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
               chmod +x /usr/local/bin/docker-compose
+
+              # Clone the repository
+              cd /home/ec2-user
+              git clone https://github.com/OrelNeto-DO/flask_sql_test.git app
+              cd app
+
+              # Set permissions
+              chmod 755 /usr/local/bin/docker-compose
+              chown -R ec2-user:ec2-user /home/ec2-user/app
+
+              # Build and run with docker-compose
+              /usr/local/bin/docker-compose up -d
+
+              # Enable docker to start on boot
+              systemctl enable docker
               EOF
 
   tags = {
