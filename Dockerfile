@@ -1,17 +1,26 @@
-# Base image for the operating system
 FROM python:3.8
 
-# Set the working directory inside the container
 WORKDIR /usr/src/app
 
-# Copy all files from the local directory to the container
+# Add build arguments
+ARG DB_USER
+ARG DB_PASSWORD
+ARG DB_HOST
+ARG DB_PORT
+ARG DB_NAME
+
+# Set them as environment variables
+ENV DB_USER=$DB_USER
+ENV DB_PASSWORD=$DB_PASSWORD
+ENV DB_HOST=$DB_HOST
+ENV DB_PORT=$DB_PORT
+ENV DB_NAME=$DB_NAME
+ENV FLASK_ENV=development
+
 COPY . .
 
-# Install required Python libraries
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose the port the application will listen on
 EXPOSE 5000
 
-# Command to run the application
 CMD ["python", "./app.py"]

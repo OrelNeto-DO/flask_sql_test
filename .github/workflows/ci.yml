@@ -1,9 +1,7 @@
 name: CI Pipeline
-
 on:
   push:
     branches: [ main ]
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
@@ -22,18 +20,37 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and test
+      env:
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_HOST: mysql
+        DB_PORT: 3306
+        DB_NAME: ${{ secrets.DB_NAME }}
       run: |
-        # Build the image
-        docker build -t orelneto/flaskapp_with_db_motogpgif:${{ github.run_number }} .
+        # Debug: Print non-sensitive environment variables
+        echo "Testing with DB_HOST=$DB_HOST and DB_PORT=$DB_PORT"
+        
+        # Build the image with build arguments
+        docker build \
+          --build-arg DB_USER=$DB_USER \
+          --build-arg DB_PASSWORD=$DB_PASSWORD \
+          --build-arg DB_HOST=$DB_HOST \
+          --build-arg DB_PORT=$DB_PORT \
+          --build-arg DB_NAME=$DB_NAME \
+          -t orelneto/flaskapp_with_db_motogpgif:${{ github.run_number }} .
         
         # Run the application with docker-compose
         docker compose up -d
         
         # Wait for the application to start
-        sleep 30
+        sleep 60
         
-        # Test the endpoint
-        curl -f http://localhost:5005 || exit 1
+        # Test the endpoint with better error handling
+        if ! curl -f http://localhost:5005; then
+          echo "Curl test failed. Checking container logs..."
+          docker compose logs
+          exit 1
+        fi
         
         # Tag images
         docker tag orelneto/flaskapp_with_db_motogpgif:${{ github.run_number }} orelneto/flaskapp_with_db_motogpgif:latest
