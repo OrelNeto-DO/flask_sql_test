@@ -142,7 +142,8 @@ resource "aws_instance" "app_server" {
               DB_PORT=$DB_PORT \
               DB_NAME=$DB_NAME \
               PORT=$PORT \
-              /usr/local/bin/docker-compose up -d
+              /usr/local/bin/docker-compose pull && \
+              /usr/local/bin/docker-compose up -d --no-build
 
               # Enable docker to start on boot
               systemctl enable docker
